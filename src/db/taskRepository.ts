@@ -17,6 +17,10 @@ export class TaskRepository {
     const tasksList = await getRepository(Task).find();
     return tasksList;
   }
+
+  // public async changeStatus() {
+  //   const newStatus = await getRepository(Task).update()
+  // }
 }
 
 export default new TaskRepository();
