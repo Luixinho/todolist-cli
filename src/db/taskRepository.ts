@@ -1,26 +1,33 @@
 import { getRepository } from "typeorm";
 import { Task } from './entities/task';
+import { ITask } from '../interfaces';
 
 export class TaskRepository {
 
-  public async createTask() {
+  public async createTask(task: ITask) {
     const newTask = new Task();
-    newTask.description = "Comprar ovos"
-    newTask.status = "pendente"
-    newTask.priority = "alta"
+    newTask.description = task.description;
+    newTask.status = task.status;
+    newTask.priority = task.priority
 
     const result = await getRepository(Task).save(newTask);
     return result;
   }
 
-  public async findTasks() {
+  public async findAllTasks() {
     const tasksList = await getRepository(Task).find();
     return tasksList;
   }
 
-  // public async changeStatus() {
-  //   const newStatus = await getRepository(Task).update()
-  // }
+  public async findPendingTasks() {
+    const tasksList = await getRepository(Task).find({ status: 'pendente' });
+    return tasksList;
+  }
+
+  public async completeTask(id) {
+    const newStatus = await getRepository(Task).update(id, { status: 'finalizada' });
+    return { message: `Task ${newStatus}`}
+  }
 }
 
 export default new TaskRepository();
