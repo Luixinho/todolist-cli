@@ -7,7 +7,6 @@ export class TaskRepository {
   public async createTask(task: ITask) {
     const newTask = new Task();
     newTask.description = task.description;
-    newTask.status = task.status;
     newTask.priority = task.priority
 
     const result = await getRepository(Task).save(newTask);
@@ -27,6 +26,10 @@ export class TaskRepository {
   public async completeTask(id) {
     const newStatus = await getRepository(Task).update(id, { status: 'finalizada' });
     return { message: `Task ${newStatus}`}
+  }
+
+  public async deleteTask(id) {
+    await getRepository(Task).delete(id);
   }
 }
 

@@ -9,7 +9,7 @@ export class Task {
   @Column()
   description: string;
 
-  @Column()
+  @Column({default: 'pendente'})
   status: string;
 
   @Column()
