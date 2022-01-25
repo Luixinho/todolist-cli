@@ -1,0 +1,8 @@
+{
+  "type": "mongodb",
+  "url": "mongodb+srv://Admin:admin@cluster0.nlo7n.mongodb.net/tasks-cli?retryWrites=true&w=majority",
+  "useUnifiedTopology": true,
+  "entities": [
+    "src/db/entities/*.ts"
+  ]
+}
