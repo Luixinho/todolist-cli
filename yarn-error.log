@@ -1,5 +1,5 @@
 Arguments: 
-  /snap/node/5770/bin/node /usr/local/bin/yarn add testarAplicacao media
+  /snap/node/5770/bin/node /usr/local/bin/yarn link
 
 PATH: 
   /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -14,17 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/testarAplicacao: Not found
-      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:67029:18)
-      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140883:22)
-      at Request.emit (node:events:390:28)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141855:10)
-      at Request.emit (node:events:390:28)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141777:12)
-      at Object.onceWrapper (node:events:509:28)
-      at IncomingMessage.emit (node:events:402:35)
-      at endReadableNT (node:internal/streams/readable:1343:12)
-      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+  Error: EACCES: permission denied, symlink '../../../home/gcb/.config/yarn/link/taskslist-cli/src/server.ts' -> '/usr/local/bin/task'
 
 npm manifest: 
   {
@@ -32,6 +22,9 @@ npm manifest:
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "bin": {
+      "task": "src/server.ts"
+    },
     "scripts": {
       "dev": "ts-node-dev src/server.ts"
     },

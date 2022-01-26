@@ -10,8 +10,9 @@ export class TaskRepository {
     newTask.status = 'pendente'
     newTask.priority = task.priority
 
-    const result = await getRepository(Task).save(newTask);
-    return result;
+    // const result = await getRepository(Task).save(newTask);
+
+    return newTask;
   }
 
   public async findAllTasks() {
@@ -47,7 +48,7 @@ export class TaskRepository {
 
 
 
-    // const configDate = 
+    // const configDate =
     return time;
   }
 }

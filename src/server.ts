@@ -10,7 +10,7 @@ const command = new Command()
 
 const program = command.version('0.0.1')
 
-program.option('-a, --all', 'show all tasks').option('-p, --priority', 'set task proprity').parse();
+program.option('-a, --all', 'show all tasks').option('-p, --priority <priority>', 'set task proprity').parse();
 
 const options = program.opts();
 
@@ -27,13 +27,13 @@ program.command('list').description('Show all pending tasks').action(async () =>
     console.log(tasksList);
   }});
 
-program.command('add <description> [<priority>]').description('Create a new task').action(async (description: string, priority: string) => {
+program.command('add <description>').description('Create a new task').action(async (description: string) => {
   if (options.priority) {
+    const priority = options.priority;
     const newTask = await TaskRepository.createTask({description, priority})
     console.log(newTask);
   } else {
-    const newTask = await TaskRepository.createTask({description, priority})
-    console.log(newTask);
+    console.log('Missing priority task value');
   }
 })
 
@@ -47,13 +47,15 @@ program.command('delete <id>').description('Delete a task').action(async (id) =>
   console.log('Task deleted!')
 });
 
-program.command('test').description('Test new functions').action(async () => {
-  const date = await taskRepository.convertCreated();
-  console.log(date);
+program.command('test <teste>').description('Test new functions').action(async (teste: string) => {
+  // const date = await taskRepository.convertCreated();
+  console.log(teste);
 });
 
 // deve ser setado um tempo porque essa funcao execulta antes do banco de dados iniciar
 setTimeout(async () => {
+  // const [,, ...args] = process.argv;
+  // console.log(args);
   program.parse(process.argv);
 }, 1000*1)
 
