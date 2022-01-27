@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import TaskRepository from './Repositories/taskRepository';
+import TaskRepository from './repositories/taskRepository';
 import { Command } from 'commander';
 import { connection } from './db/connect';
 
 import './db/connect';
-import taskRepository from './Repositories/taskRepository';
+import taskRepository from './repositories/taskRepository';
 
 const command = new Command()
 
