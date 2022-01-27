@@ -14,7 +14,7 @@ program.option('-a, --all', 'show all tasks').option('-p, --priority <priority>'
 
 const options = program.opts();
 
-program.command('log').description('loga sla').action(() => {
+program.command('log <arg>').description('loga sla').action(() => {
   console.log('sla');
 });
 
@@ -25,7 +25,14 @@ program.command('list').description('Show all pending tasks').action(async () =>
   } else {
     const tasksList = await TaskRepository.findPendingTasks()
     console.log(tasksList);
-  }});
+  }
+});
+
+program.command('next').description('Shows the next task of each priority').action(async () => {
+  // const tasksList =
+  await TaskRepository.next();
+  // console.log(tasksList);
+});
 
 program.command('add <description>').description('Create a new task').action(async (description: string) => {
   if (options.priority) {
@@ -38,27 +45,24 @@ program.command('add <description>').description('Create a new task').action(asy
 })
 
 program.command('complete <id>').description('Change task status to complete').action(async (id) => {
-  const changed = await TaskRepository.completeTask(id);
-  console.log(changed);
+  const result = await TaskRepository.completeTask(id);
+  console.log(result);
 })
 
 program.command('delete <id>').description('Delete a task').action(async (id) => {
-  await taskRepository.deleteTask(id);
-  console.log('Task deleted!')
+  const result = await taskRepository.deleteTask(id);
+  console.log(result)
 });
 
 program.command('test').description('Test new functions').action(async (teste: string) => {
-  const taskdate = new Date('2022-01-27 15:00:00');
-  const date = await taskRepository.convertCreated(taskdate);
-  console.log(date);
+  console.log('teste')
 });
 
 // deve ser setado um tempo porque essa funcao execulta antes do banco de dados iniciar
 setTimeout(async () => {
-  // const [,, ...args] = process.argv;
-  // console.log(args);
   program.parse(process.argv);
 }, 1000*1)
+
 
 setTimeout(async () => {
   connection.then((connect) => connect.close());
