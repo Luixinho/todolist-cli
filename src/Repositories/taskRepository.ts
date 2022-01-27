@@ -1,5 +1,5 @@
 import { getRepository, ObjectID } from "typeorm";
-import { Task } from './entities/task';
+import { Task } from '../db/entities/task';
 import { ITask } from '../interfaces';
 
 export class TaskRepository {
@@ -31,25 +31,29 @@ export class TaskRepository {
   }
 
   public async next() {
-    const tasks = await getRepository(Task).find({ status: 'pendente'});
+    const tasks = await (await getRepository(Task).find({ status: 'pendente'}));
     const tasksBaixa = tasks.filter((task) => task.priority === 'baixa' ? true : false);
     const tasksMedia = tasks.filter((task) => task.priority === 'media' ? true : false);
     const tasksAlta = tasks.filter((task) => task.priority === 'alta' ? true : false);
 
-    const task = tasksMedia.map((task, index) => {
+    const sla =  await this.formatDate(tasksBaixa);
 
-      const date1: any = task.createdAt;
-      const date2: any = tasksMedia[0].createdAt
-      // if (date1 < date2) {
-      //   return task
-      // }
 
-      return date1
-    })
+    const task = tasksBaixa.map(async (task, index) => {
 
-    for (let index = 0; index < tasksMedia.length; index++) {
-      
-    }
+      const date1 = await this.convertCreated(task.createdAt);
+      const date2 = await this.convertCreated(tasksBaixa[1].createdAt);
+      if (date1 <= date2) {
+        return task
+      } else {
+        console.log('nao')
+      }
+    });
+
+    // for (let index = 0; index < tasksMedia.length; index++) {
+    //   let i = index+1
+    //   const taskk = tasksMedia.map((task) => task.createdAt )
+    // }
 
     console.log(task);
   }
@@ -78,7 +82,11 @@ export class TaskRepository {
   private async formatDate(list: ITask[]) {
     const newTaskList = list.map(async (task: ITask) => {
       const newCreated = await this.convertCreated(task.createdAt)
-      task.createdAt = newCreated
+      if (newCreated === 1) {
+        task.createdAt = `${newCreated} hora`
+      } else {
+        task.createdAt = `${newCreated} horas`
+      }
       return task
     });
     return newTaskList;
@@ -96,11 +104,7 @@ export class TaskRepository {
     const dias = Math.floor(horas / 24);
     const meses = Math.floor( dias / 30);
 
-    if (horas === 1) {
-    return `${horas} hora`;
-    } else {
-      return `${horas} horas`;
-    }
+    return horas;
   }
 }
 

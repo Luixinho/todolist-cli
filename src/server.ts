@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import TaskRepository from './db/taskRepository';
+import TaskRepository from './Repositories/taskRepository';
 import { Command } from 'commander';
 import { connection } from './db/connect';
 
 import './db/connect';
-import taskRepository from './db/taskRepository';
+import taskRepository from './Repositories/taskRepository';
 
 const command = new Command()
 
@@ -29,9 +29,8 @@ program.command('list').description('Show all pending tasks').action(async () =>
 });
 
 program.command('next').description('Shows the next task of each priority').action(async () => {
-  // const tasksList =
   await TaskRepository.next();
-  // console.log(tasksList);
+
 });
 
 program.command('add <description>').description('Create a new task').action(async (description: string) => {
