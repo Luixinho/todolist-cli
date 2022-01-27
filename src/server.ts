@@ -47,9 +47,10 @@ program.command('delete <id>').description('Delete a task').action(async (id) =>
   console.log('Task deleted!')
 });
 
-program.command('test <teste>').description('Test new functions').action(async (teste: string) => {
-  // const date = await taskRepository.convertCreated();
-  console.log(teste);
+program.command('test').description('Test new functions').action(async (teste: string) => {
+  const taskdate = new Date('2022-01-27 15:00:00');
+  const date = await taskRepository.convertCreated(taskdate);
+  console.log(date);
 });
 
 // deve ser setado um tempo porque essa funcao execulta antes do banco de dados iniciar

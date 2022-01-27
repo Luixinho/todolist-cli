@@ -6,6 +6,6 @@ export interface ITask {
   description: string;
   status?: string;
   priority: string;
-  createdAt?: Date;
+  createdAt?: Date | string;
 
 }

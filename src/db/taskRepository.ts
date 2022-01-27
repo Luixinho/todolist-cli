@@ -10,19 +10,29 @@ export class TaskRepository {
     newTask.status = 'pendente'
     newTask.priority = task.priority
 
-    // const result = await getRepository(Task).save(newTask);
+    const result = await getRepository(Task).save(newTask);
 
-    return newTask;
+    return result;
   }
 
   public async findAllTasks() {
     const tasksList = await getRepository(Task).find();
-    return tasksList;
+    const newTaskList = tasksList.map(async (task: ITask) => {
+      const newCreated = await this.convertCreated(task.createdAt)
+      task.createdAt = newCreated
+      return task
+    });
+    return newTaskList;
   }
 
   public async findPendingTasks() {
     const tasksList = await getRepository(Task).find({ status: 'pendente' });
-    return tasksList;
+      const newTaskList = tasksList.map(async (task: ITask) => {
+      const newCreated = await this.convertCreated(task.createdAt)
+      task.createdAt = newCreated
+      return task
+    });
+    return newTaskList;
   }
 
   public async completeTask(id) {
@@ -34,22 +44,23 @@ export class TaskRepository {
     await getRepository(Task).delete(id);
   }
 
-  public async convertCreated() {
-    const task = await getRepository(Task).findOne();
-    // const taskDate: any = task.createdAt
-    const taskDate: any = new Date('2022-01-26 15:45:00')
-    const newDate: any = new Date('2022-01-27 15:47:00');
+  public async convertCreated(date: Date | string) {
+    const taskDate: any = date
+    const newDate: any = new Date();
     const elapsedTime = Math.abs(taskDate - newDate);
 
-    const time = elapsedTime%3600000;
-    const horas = Math.round(elapsedTime / 3600000);
-    const minutos = Math.round(elapsedTime % 3600000)
-    const segundos = Math.round(elapsedTime / 3600)
+    const horas = Math.floor(elapsedTime / 3600000);
 
+    const minutos = Math.floor((elapsedTime % 3600000) / 60000);
+    const segundos = Math.floor(((elapsedTime % 3600000) % 60000) / 1000);
+    const dias = Math.floor(horas / 24);
+    const meses = Math.floor( dias / 30);
 
-
-    // const configDate =
-    return time;
+    if (horas === 1) {
+    return `${horas} hora`;
+    } else {
+      return `${horas} horas`;
+    }
   }
 }
 
