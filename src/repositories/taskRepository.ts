@@ -1,4 +1,4 @@
-import { getRepository, ObjectID } from "typeorm";
+import { getRepository, ObjectID, Timestamp } from "typeorm";
 import { Task } from '../db/entities/task';
 import { ITask } from '../interfaces';
 
@@ -31,31 +31,31 @@ export class TaskRepository {
   }
 
   public async next() {
-    const tasks = await (await getRepository(Task).find({ status: 'pendente'}));
+    const tasks = await getRepository(Task).find({ status: 'pendente'});
     const tasksBaixa = tasks.filter((task) => task.priority === 'baixa' ? true : false);
     const tasksMedia = tasks.filter((task) => task.priority === 'media' ? true : false);
     const tasksAlta = tasks.filter((task) => task.priority === 'alta' ? true : false);
 
-    const sla =  await this.formatDate(tasksBaixa);
 
+      const form = await this.formatDate(tasksBaixa);
 
-    const task = tasksBaixa.map(async (task, index) => {
+      form.map((task) => {
+        task.then((task) => {
+          task.createdAt
+        })
+      })
 
-      const date1 = await this.convertCreated(task.createdAt);
-      const date2 = await this.convertCreated(tasksBaixa[1].createdAt);
-      if (date1 <= date2) {
-        return task
-      } else {
-        console.log('nao')
-      }
-    });
+      var result = await form.reduce(async (a: any, b: any): Promise<any> => {
+        const sla = Timestamp.MIN_VALUE.lessThan((await a).createdAt)
+        return sla
 
-    // for (let index = 0; index < tasksMedia.length; index++) {
-    //   let i = index+1
-    //   const taskk = tasksMedia.map((task) => task.createdAt )
-    // }
+    })
 
-    console.log(task);
+    // let max = Math.max.apply(null, myArray.map(function(item) {
+    //   return item.Cost;
+    // }));
+
+    console.log('task', result)
   }
 
   public async completeTask(id: ObjectID) {
