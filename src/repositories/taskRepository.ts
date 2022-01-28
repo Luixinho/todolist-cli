@@ -9,6 +9,7 @@ class TaskRepository {
     newTask.description = task.description;
     newTask.status = 'pendente'
     newTask.priority = task.priority
+    newTask.isDeleted = false;
 
     try {
       const result: ITask = await getRepository(Task).save(newTask);
@@ -19,12 +20,12 @@ class TaskRepository {
   }
 
   public async findAllTasks() {
-    const tasksList = await getRepository(Task).find();
+    const tasksList = await getRepository(Task).find({ isDeleted: false });
     return tasksList;
   }
 
   public async findPendingTasks() {
-    const tasksList = await getRepository(Task).find({ status: 'pendente' });
+    const tasksList = await getRepository(Task).find({ status: 'pendente', isDeleted: false });
     return tasksList;
   }
 
@@ -40,7 +41,7 @@ class TaskRepository {
   }
 
   public async deleteTask(id: ObjectID) {
-    const result = await getRepository(Task).delete(id);
+    const result = await getRepository(Task).update(id, { isDeleted: true });
 
     if (result.affected === 1) {
       return { message: 'Task deleted'}

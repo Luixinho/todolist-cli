@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "task": "src/server.ts"
+    "task": "dist/server.js"
   },
   "scripts": {
     "dev": "ts-node-dev src/server.ts"
@@ -27,7 +27,6 @@
     "mongodb": "3.7.1",
     "mongoose": "^6.1.8",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.41",
-    "yup": "^0.32.11"
+    "typeorm": "^0.2.41"
   }
 }

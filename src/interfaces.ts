@@ -7,5 +7,6 @@ export interface ITask {
   status?: string;
   priority: string;
   createdAt?: Date | string;
+  isDeleted?: boolean;
 
 }

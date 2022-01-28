@@ -18,4 +18,7 @@ export class Task {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column()
+  isDeleted?: boolean;
+
 }
