@@ -1,12 +1,11 @@
 import TaskRepository from '../repositories/taskRepository';
 import { ITask } from '../interfaces';
 import { ObjectID } from 'typeorm';
-import validate from '../middlewares/fildValidator'
+import validate from '../middlewares/fildValidator';
 
 class TaskService {
 
   public async createTask(task: ITask) {
-
 
     const isValid = validate(task.priority);
 
