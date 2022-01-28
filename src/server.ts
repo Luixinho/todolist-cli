@@ -29,8 +29,8 @@ program.command('list').description('Show all pending tasks').action(async () =>
 });
 
 program.command('next').description('Shows the next task of each priority').action(async () => {
-  await TaskRepository.next();
-
+  const nextTasks = await TaskRepository.next();
+  console.log(nextTasks);
 });
 
 program.command('add <description>').description('Create a new task').action(async (description: string) => {

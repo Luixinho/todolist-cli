@@ -32,30 +32,19 @@ export class TaskRepository {
 
   public async next() {
     const tasks = await getRepository(Task).find({ status: 'pendente'});
-    const tasksBaixa = tasks.filter((task) => task.priority === 'baixa' ? true : false);
-    const tasksMedia = tasks.filter((task) => task.priority === 'media' ? true : false);
-    const tasksAlta = tasks.filter((task) => task.priority === 'alta' ? true : false);
+    const baixas = tasks.filter((task) => task.priority === 'baixa' ? true : false);
+    const medias = tasks.filter((task) => task.priority === 'media' ? true : false);
+    const altas = tasks.filter((task) => task.priority === 'alta' ? true : false);
 
+    const tasksBaixa = await this.formatDate(baixas);
+    const tasksMedia = await this.formatDate(medias);
+    const tasksAlta = await this.formatDate(altas);
 
-      const form = await this.formatDate(tasksBaixa);
-
-      form.map((task) => {
-        task.then((task) => {
-          task.createdAt
-        })
-      })
-
-      var result = await form.reduce(async (a: any, b: any): Promise<any> => {
-        const sla = Timestamp.MIN_VALUE.lessThan((await a).createdAt)
-        return sla
-
-    })
-
-    // let max = Math.max.apply(null, myArray.map(function(item) {
-    //   return item.Cost;
-    // }));
-
-    console.log('task', result)
+    return {
+      alta: tasksBaixa.length === 0 ? 'There are no tasks' : tasksAlta[0],
+      media: tasksMedia.length === 0 ? 'There are no tasks' : tasksMedia[0],
+      baixa: tasksAlta.length === 0 ? 'There are no tasks' : tasksBaixa[0]
+    };
   }
 
   public async completeTask(id: ObjectID) {
@@ -80,8 +69,8 @@ export class TaskRepository {
   }
 
   private async formatDate(list: ITask[]) {
-    const newTaskList = list.map(async (task: ITask) => {
-      const newCreated = await this.convertCreated(task.createdAt)
+    const newTaskList = list.map((task: ITask) => {
+      const newCreated = this.convertCreated(task.createdAt)
       if (newCreated === 1) {
         task.createdAt = `${newCreated} hora`
       } else {
@@ -92,17 +81,12 @@ export class TaskRepository {
     return newTaskList;
   }
 
-  private async convertCreated(date: Date | string) {
+  private convertCreated(date: Date | string) {
     const taskDate: any = date
     const newDate: any = new Date();
     const elapsedTime = Math.abs(taskDate - newDate);
 
     const horas = Math.floor(elapsedTime / 3600000);
-
-    const minutos = Math.floor((elapsedTime % 3600000) / 60000);
-    const segundos = Math.floor(((elapsedTime % 3600000) % 60000) / 1000);
-    const dias = Math.floor(horas / 24);
-    const meses = Math.floor( dias / 30);
 
     return horas;
   }
