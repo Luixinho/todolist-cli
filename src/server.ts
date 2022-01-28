@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import TaskRepository from './repositories/taskRepository';
+import TaskService from './services/taskService';
 import { Command } from 'commander';
 import { connection } from './db/connect';
 
+import validate from './middlewares/fildValidator';
+
 import './db/connect';
-import taskRepository from './repositories/taskRepository';
 
 const command = new Command()
 
@@ -18,38 +19,44 @@ program.command('log <arg>').description('loga sla').action(() => {
   console.log('sla');
 });
 
+program.command('add <description>').description('Create a new task').action(async (description: string) => {
+  if (options.priority) {
+    const priority = options.priority;
+    const isValid = validate(priority);
+
+    if (isValid) {
+      const newTask = await TaskService.createTask({description, priority})
+      console.log(newTask);
+    } else {
+      console.log('The priority value must be baixa or media or alta ')
+    }
+  } else {
+    console.log('Missing priority task value, use -p option to pass priority ');
+  }
+})
+
 program.command('list').description('Show all pending tasks').action(async () => {
   if (options.all) {
-    const tasksList = await TaskRepository.findAllTasks();
+    const tasksList = await TaskService.findAllTasks();
     console.log('all', tasksList);
   } else {
-    const tasksList = await TaskRepository.findPendingTasks()
+    const tasksList = await TaskService.findPendingTasks()
     console.log(tasksList);
   }
 });
 
 program.command('next').description('Shows the next task of each priority').action(async () => {
-  const nextTasks = await TaskRepository.next();
+  const nextTasks = await TaskService.next();
   console.log(nextTasks);
 });
 
-program.command('add <description>').description('Create a new task').action(async (description: string) => {
-  if (options.priority) {
-    const priority = options.priority;
-    const newTask = await TaskRepository.createTask({description, priority})
-    console.log(newTask);
-  } else {
-    console.log('Missing priority task value');
-  }
-})
-
 program.command('complete <id>').description('Change task status to complete').action(async (id) => {
-  const result = await TaskRepository.completeTask(id);
+  const result = await TaskService.completeTask(id);
   console.log(result);
 })
 
 program.command('delete <id>').description('Delete a task').action(async (id) => {
-  const result = await taskRepository.deleteTask(id);
+  const result = await TaskService.deleteTask(id);
   console.log(result)
 });
 
