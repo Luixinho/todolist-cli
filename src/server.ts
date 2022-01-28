@@ -3,8 +3,6 @@ import TaskService from './services/taskService';
 import { Command } from 'commander';
 import { connection } from './db/connect';
 
-import validate from './middlewares/fildValidator';
-
 import './db/connect';
 
 const command = new Command()
@@ -22,14 +20,8 @@ program.command('log <arg>').description('loga sla').action(() => {
 program.command('add <description>').description('Create a new task').action(async (description: string) => {
   if (options.priority) {
     const priority = options.priority;
-    const isValid = validate(priority);
-
-    if (isValid) {
-      const newTask = await TaskService.createTask({description, priority})
-      console.log(newTask);
-    } else {
-      console.log('The priority value must be baixa or media or alta ')
-    }
+    const newTask = await TaskService.createTask({description, priority})
+    console.log(newTask);
   } else {
     console.log('Missing priority task value, use -p option to pass priority ');
   }

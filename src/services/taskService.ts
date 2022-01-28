@@ -1,12 +1,22 @@
 import TaskRepository from '../repositories/taskRepository';
 import { ITask } from '../interfaces';
 import { ObjectID } from 'typeorm';
+import validate from '../middlewares/fildValidator'
 
 class TaskService {
 
   public async createTask(task: ITask) {
-    const created = await TaskRepository.createTask(task);
-    return created;
+
+
+    const isValid = validate(task.priority);
+
+    if (isValid) {
+      const created = await TaskRepository.createTask(task);
+      return created;
+    } else {
+      return 'The priority value must be baixa or media or alta'
+    }
+
   }
 
   public async findAllTasks() {
