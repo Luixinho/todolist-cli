@@ -33,9 +33,9 @@ class TaskService {
     const tasksAlta = await this.formatDate(altas);
 
     return {
-      alta: tasksBaixa.length === 0 ? 'There are no tasks' : tasksAlta[0],
+      alta: tasksAlta.length === 0 ? 'There are no tasks' : tasksAlta[0],
       media: tasksMedia.length === 0 ? 'There are no tasks' : tasksMedia[0],
-      baixa: tasksAlta.length === 0 ? 'There are no tasks' : tasksBaixa[0]
+      baixa: tasksBaixa.length === 0 ? 'There are no tasks' : tasksBaixa[0]
     };
   }
 

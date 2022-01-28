@@ -20,33 +20,51 @@ class TaskRepository {
   }
 
   public async findAllTasks() {
-    const tasksList = await getRepository(Task).find({ isDeleted: false });
-    return tasksList;
+
+    try {
+      const tasksList = await getRepository(Task).find({ isDeleted: false });
+      return tasksList;
+    } catch (error) {
+      console.log({ message: 'Search failed', error: error.message, code: error.code });
+    }
   }
 
   public async findPendingTasks() {
-    const tasksList = await getRepository(Task).find({ status: 'pendente', isDeleted: false });
-    return tasksList;
+    try {
+      const tasksList = await getRepository(Task).find({ status: 'pendente', isDeleted: false });
+      return tasksList;
+    } catch (error) {
+      console.log({ message: 'Search failed', error: error.message, code: error.code });
+    }
   }
 
   public async completeTask(id: ObjectID) {
-    const result = await getRepository(Task).update(id, { status: 'finalizada' });
 
-    if (result.affected === 1) {
-      return { message: 'Task completed'}
-    } else {
-      return { message: 'Task not found'}
+    try {
+      const result = await getRepository(Task).update(id, { status: 'finalizada' });
+      if (result.affected === 1) {
+        return { message: 'Task completed'}
+      } else {
+        return { message: 'Task not found'}
+      }
+    } catch (error) {
+      console.log({ message: 'Action failed', error: error.message, code: error.code });
     }
 
   }
 
   public async deleteTask(id: ObjectID) {
-    const result = await getRepository(Task).update(id, { isDeleted: true });
 
-    if (result.affected === 1) {
-      return { message: 'Task deleted'}
-    } else {
-      return { message: 'Task not found'}
+    try {
+      const result = await getRepository(Task).update(id, { isDeleted: true });
+
+      if (result.affected === 1) {
+        return { message: 'Task deleted'}
+      } else {
+        return { message: 'Task not found'}
+      }
+    } catch (error) {
+      console.log({ message: 'Action failed', error: error.message, code: error.code });
     }
   }
 
